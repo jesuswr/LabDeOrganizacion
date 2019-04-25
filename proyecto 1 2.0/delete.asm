@@ -3,24 +3,27 @@
 
 delete: 
 	sw $s0, 0($sp) 
-	sw $s1, 4($sp) 
-	sw $s2, 8($sp)
-	sw $s3, 12($sp)
-	sw $s4, 16($sp) 
-	sw $s5, 20($sp) 
-	sw $s6, 24($sp) 
-	sw $s7, 28($sp)
-	sw $t0, 32($sp)
-	sw $ra, 36($sp)
+	sw $s1, -4($sp) 
+	sw $s2, -8($sp)
+	sw $s3, -12($sp)
+	sw $s4, -16($sp) 
+	sw $s5, -20($sp) 
+	sw $s6, -24($sp) 
+	sw $s7, -28($sp)
+	sw $t0, -32($sp)
+	sw $ra, -36($sp)
 	
 	addi $sp, $sp, -40
 		
 	move $s0, $a0
+	
+	lw $t0, 12($s0), exception 			# Determining if the pointer addres does point a valid list
+	
 	move $s1, $a1
 		
 	lw $s2, 8($s0) 		# se carga SIZE
 		
-	bgt $s1, $s2, noSuchPosition
+	bgt $s1, $s2, exception2			# Determining if the position to delete is a valid one
 
 	lw $s3, 0($s0) 		# se carga FIRST == s
 	addi $s4, $zero, 1 	# contador i = 1
@@ -75,20 +78,25 @@ delete:
 		sw $s5, 4($s0) 		# LAST = temp
 		j exitDelete
 		
-	noSuchPosition: 
-		li $v0, -1
+	exception: 
+		li $v0, -2			# The given address does not contain a list
+		j exitDelete
+		
+	exception2: 
+		li $v0, -1			# The position to delete is greater than size
 		j exitDelete
 		
 	exitDelete: 		
 		lw $ra, 4($sp) 
 		lw $t0, 8($sp)
-		lw $s6, 12($sp) 
-		lw $s5, 16($sp) 
-		lw $s4, 20($sp) 
-		lw $s3, 24($sp) 
-		lw $s2, 28($sp) 
-		lw $s1, 32($sp) 
-		lw $s0, 36($sp) 
+		lw $s7 12($sp)
+		lw $s6, 16($sp) 
+		lw $s5, 20($sp) 
+		lw $s4, 24($sp) 
+		lw $s3, 28($sp) 
+		lw $s2, 32($sp) 
+		lw $s1, 36($sp) 
+		lw $s0, 40($sp) 
 		
 
 		addi $sp, $sp, 40
@@ -96,10 +104,7 @@ delete:
 		jr $ra
 
 		
-## falta: 
-### verificar lo del $ra cuando llamo a free
-### verificar que funcione la asignacion a $a0, en deleting
-### verificar que no haya que crear una etiqueta de salida		
+
 		
 .
 		

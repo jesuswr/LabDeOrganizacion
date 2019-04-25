@@ -18,7 +18,7 @@
 	
 	while: 
 	
-		beq $t1, 10, exit 	
+		beq $t1, 2, exit 	
 		
 		addi $a0, $zero, 4 		# pido espacio para un ELEMENTO
 	
@@ -36,10 +36,28 @@
 	exit: 
 	
 		##
-		
-	li $a1, 4
-	move $a0, $s0
-	jal delete
+
+	
+### CASOS BORDE
+# Elimino el primero
+#	li $a1, 1
+#	move $a0, $s0
+#	jal delete
+	
+# Elimino el ultimo
+#	li $a1, 7
+#	move $a0, $s0
+#	jal delete
+	
+# Elimino el unico elemento
+#	li $a1, 1
+#	move $a0, $s0
+#	jal delete
+
+# Elimino a un elemento que no esta en la lista		
+#	li $a1, 4
+#	move $a0, $s0
+#	jal delete
 	
 	
 	li $v0, 10
