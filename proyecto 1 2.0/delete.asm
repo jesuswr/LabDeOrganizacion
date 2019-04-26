@@ -16,14 +16,14 @@ delete:
 	addi $sp, $sp, -40
 		
 	move $s0, $a0
-	
-	lw $t0, 12($s0), exception 			# Determining if the pointer addres does point a valid list
+	lw $t0, 12($s0)
+	beq $s0, -1, deleteException 			# Determining if the pointer addres does point a valid list
 	
 	move $s1, $a1
 		
-	lw $s2, 8($s0) 		# se carga SIZE
+	lw $s2, 8($s0) 			
 		
-	bgt $s1, $s2, exception2			# Determining if the position to delete is a valid one
+	bgt $s1, $s2, deleteException2			# Determining if the position to delete is a valid one
 
 	lw $s3, 0($s0) 		# se carga FIRST == s
 	addi $s4, $zero, 1 	# contador i = 1
@@ -54,35 +54,36 @@ delete:
 		j ver
 		
 	deleteFirst: 
-		bne $s2, 0, updateFirst		# Si el tamano termina distinto de 0
+		bne $s2, 0, updateFirst		
 		
-		beq $s2, 0, single 			# Si se elimina el unico elemento
+		beq $s2, 0, single 			
 		
-		updateFirst: 
+		updateFirst: 			# This tag updates the "first" attribute if the deleted element was first on the list
 			sw $s6, 0($s0) 		# FIRST = nNext
 			j ver
 		
-		single: 
+		single: 					# This tag deals with lists that, after deletion, have no elements left
 			addi $t0, $zero, -1
-			sw $t0, 0($s0) 		# FIRST = -1
-			sw $t0, 4($s0) 		# LAST = -1
+			sw $t0, 0($s0) 			# FIRST = -1
+			sw $t0, 4($s0) 			# LAST = -1
 			j exitDelete
 	
 	ver: 
+	
 	addi $s2, $s2, 1
 	
-	beq $s1, $s2, updateLast 		# Si la posicion correspondia al ultimo elemento
+	beq $s1, $s2, updateLast
 	bne $s1, $s2, exitDelete
 	
-	updateLast: 
-		sw $s5, 4($s0) 		# LAST = temp
+	updateLast: 			# This tag updates the "last" atribute if the deleted element was the last one on the list
+		sw $s5, 4($s0) 		
 		j exitDelete
 		
-	exception: 
+	deleteException: 
 		li $v0, -2			# The given address does not contain a list
 		j exitDelete
 		
-	exception2: 
+	deleteException2: 
 		li $v0, -1			# The position to delete is greater than size
 		j exitDelete
 		
@@ -106,5 +107,4 @@ delete:
 		
 
 		
-.
 		
