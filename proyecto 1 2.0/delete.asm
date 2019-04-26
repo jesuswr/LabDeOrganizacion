@@ -39,7 +39,7 @@ delete:
 		
 	exitWhileDelete: 
 		lw $s6, 4($s3)	# guardo el next del elemento a eliminar
-		lw $a0, 0($s3) 	# guardo en $a0 la direccion a liberar
+		move $a0, $s3 	# guardo en $a0 la direccion a liberar
 		jal free
 		addi $s2, $s2, -1	# SIZE = SIZE - 1
 		sw $s2, 8($s0)

@@ -1,5 +1,5 @@
 .data
-	input: .asciiz "cuantos elementos desea crear?: ?"
+	input: .asciiz "cuantos elementos desea crear?: "
 	elemento: .asciiz "inserte: "
 	insertados: .asciiz "elementos creados\n"
 	creada: .asciiz "lista creada:\n"
@@ -8,6 +8,9 @@
 	cb2: .asciiz "\tElimino al ultimo: \n"
 	cb3: .asciiz "\tElimino una posicion que no este en la lista: \n" 
 	cb4: .asciiz "\tElimino usando una lista no valida: \n"
+	confirmacion: .asciiz "\nFreelist\n"
+	pregunta: .asciiz "Insertar (1) | Eliminar (2) | Print(3)| Salir (4) "
+	posicion: .asciiz "Posicion a eliminar: "
 .text
 
 #######################################################
@@ -133,12 +136,6 @@
 	move $a0, $s0
 	jal print
 	
-	
-# Elimino el unico elemento
-#	li $a1, 1
-#	move $a0, $s0
-#	jal delete
-
 ############## Elimino a uno que no este en la lista
 	li $v0, 4
 	la $a0, cb3
@@ -153,7 +150,6 @@
 	jal print
 	
 
-
 ############### Elimino pasando una lista no valida
 	li $v0, 4
 	la $a0, cb4
@@ -166,9 +162,104 @@
 	move $a0, $s0
 	jal print
 	
+
+## IMPRESION DE LA FREELIST ##########################################################################	
+printFreeList: 
+
+	la $t5, freeList
+	lw $t4, freeListSize($zero)	
+	
+	
+	addi $t0, $zero, 0 
+	whilePrintFree: 
+		beq $t4, $t0, exitWhilePrintFree
+		
+		li $v0,1 
+		move $a0, $s0
+		syscall 
+		
+		addi $t5, $t5, 1
+		addi $t0, $t0, 1 
+	exitWhilePrintFree: 
+		 
+		li $v0, 4
+		la $a0, confirmacion
+		syscall
+
+
+## INSERT INTERACTIVO ##########################################################################		
+
+
+insertInteractivo: 
+
+	li $v0, 4
+	la $a0, pregunta
+	syscall 
+	
+	li $v0, 5
+	syscall 
+	
+	move $t7, $v0
+
+	beq $t7, 1, INSERTA
+	beq $t7, 2, ELIMINA	
+	beq $t7, 3, PRINT
+	beq $t7, 4, exitInsertInteractivo
+
+	
+	INSERTA: 
+		addi $a0, $zero, 4
+		jal malloc
+		
+		move $t3, $v0
+	
+		li $v0, 4
+		la $a0, elemento
+		syscall 
+		
+		li $v0, 5
+		syscall 
+
+		sw $v0, ($t3)
+		
+		move $a0, $s0
+		move $a1, $t3
+
+		jal insert
+		
+		j insertInteractivo
+			
+	ELIMINA: 
+		li $v0, 4
+		la $a0, posicion
+		syscall 
+		
+		li $v0, 5
+		syscall 
+		
+		move $a0, $s0
+		move $a1, $v0
+		
+		jal delete
+		
+		j insertInteractivo
+		
+	PRINT: 
+		move $a0, $s0
+		jal print
+		
+		j insertInteractivo
+		
+	
+	
+exitInsertInteractivo: 
 	li $v0, 10
 	syscall 
-
+	
+	
+	
+	
+	
 
 
 .include "create.asm" 
