@@ -17,7 +17,7 @@ delete:
 		
 	move $s0, $a0
 	lw $t0, 12($s0)
-	beq $t0, -1, deleteException 			# Determining if the pointer addres does point a valid list
+	bne $t0, -1, deleteException 			# Determining if the pointer addres does point a valid list
 	
 	move $s1, $a1
 		

@@ -166,8 +166,8 @@
 ## IMPRESION DE LA FREELIST ##########################################################################	
 printFreeList: 
 
-	la $t5, freeList
-	lw $t4, freeListSize($zero)	
+	lw $t5, freeList
+	lw $t4, freeListSize	
 	
 	
 	addi $t0, $zero, 0 
@@ -175,11 +175,13 @@ printFreeList:
 		beq $t4, $t0, exitWhilePrintFree
 		
 		li $v0,1 
-		move $a0, $s0
+		lb $a0, ($t5)
 		syscall 
 		
 		addi $t5, $t5, 1
 		addi $t0, $t0, 1 
+		
+		j whilePrintFree
 	exitWhilePrintFree: 
 		 
 		li $v0, 4
