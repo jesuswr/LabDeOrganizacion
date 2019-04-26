@@ -53,7 +53,7 @@ free:
 	
 	errorNotUsedSpace:
 	
-		addi	$v0, $zero, -2
+		addi	$v0, $zero, -2		# ERROR CODE: the address given is not the start of a memory block.
 	
 		j 	exitFree
 	
