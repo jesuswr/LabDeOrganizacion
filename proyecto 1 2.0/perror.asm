@@ -28,43 +28,43 @@ perror:
 		
 	J exitPerror			# This line exits perror if none of the previous conditions were matched
 			
-	print1:
+	print1:					# There's not enough space for allocating memory
 		la 	$a0, error1
 		li	$v0, 4
 		syscall
 		
 		j 	exitPerror
 		
-	print2:
+	print2:					# The given address is not the beggining of a memory block 
 		la 	$a0, error2
 		li	$v0, 4
 		syscall
 		
 		j 	exitPerror
 		
-	print3:
+	print3:					# The given insertion address does not correspond with a valid list address
 		la 	$a0, error3
 		li	$v0, 4
 		syscall
 		
-		j 	exitPerror
+		j 	exitPerror	
 
 
-	print4:
+	print4:					# There is not enough space to insert the node
 		la 	$a0, error4
 		li	$v0, 4
 		syscall
 		
 		j 	exitPerror#
 		
-	print5:
+	print5:					# The given deletion address does not correspond with a valid list
 		la 	$a0, error5
 		li	$v0, 4
 		syscall
 		
 		j 	exitPerror
 		
-	print6:
+	print6:					# The given address does not reference a node
 		la 	$a0, error6
 		li	$v0, 4
 		syscall
