@@ -80,11 +80,11 @@ delete:
 		j exitDelete
 		
 	deleteException: 
-		li $v0, -2			# The given address does not contain a list
+		li $v0, -5			# The given address does not contain a list
 		j exitDelete
 		
 	deleteException2: 
-		li $v0, -1			# The position to delete is greater than size
+		li $v0, -6			# The position to delete is greater than size
 		j exitDelete
 		
 	exitDelete: 		

@@ -69,11 +69,11 @@ insert:
 	    j exitInsert
 	 
 	insertException: 
-		li $v0, -1 					# The given address does not contain a list
+		li $v0, -3 					# The given address does not contain a list
     	j exitInsert 
     	
     insertException2: 
-    	li $v0, -2					# There is not enough space
+    	li $v0, -4					# There is not enough space
     	j exitInsert
     	
 	exitInsert: 

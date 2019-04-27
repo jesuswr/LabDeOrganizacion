@@ -19,6 +19,9 @@
 ### Se considera que los elementos se crean en el mismo espacio que el de la lista
 ### para los registro GLOBALES se usara $s_i
 
+### Es importante aclarar que luego de cada llamada a init, malloc, free, insert y delete se coloca "jal perror" para imprimir
+### estatus de error.
+
 
 ## CREACION DE LA LISTA ################################################################################
 	jal create
@@ -37,10 +40,11 @@
 	
 	addi $t1, $zero, 4
 	
-	mul $a0, $t1, $s1				# aqui se calculan los bytes a pdir	
+	mul $a0, $t1, $s1				# aqui se calculan los bytes a pedir	
 	
 	jal malloc 			
-	
+	jal perror 			# Exeption handler
+				
 	move $s2, $v0							# Elements_ptr == GLOBALL !!
 	move $t0, $v0					# aqui se guarda el Elements_ptr a usar en WHileElements
 	
@@ -85,6 +89,8 @@
 		
 		jal insert
 		
+		jal perror		# Exception Handler
+		
 		addi $t1, $t1, 1
 		addi $s2, $s2, 4
 		
@@ -102,7 +108,7 @@
 ## IMPRESION DE LA LISTA ##########################################################################
 	jal print
 	
-
+	
 ###################################### MAS PRUEBAS ################################################
 
 ### CASOS BORDE
@@ -115,6 +121,8 @@
 	li $a1, 1
 	move $a0, $s0
 	jal delete
+
+	jal perror 			# Exception Handler
 
 	move $a0, $s0
 	jal print
@@ -132,7 +140,9 @@
 	lw $a1, 8($s0), 
 	move $a0, $s0
 	jal delete
-	
+
+	jal perror 			# Exception Handler
+			
 	move $a0, $s0
 	jal print
 	
@@ -146,6 +156,8 @@
 	move $a0, $s0
 	jal delete
 	
+	jal perror 			# Exception Handler
+	
 	move $a0, $s0
 	jal print
 	
@@ -155,9 +167,10 @@
 	la $a0, cb4
 	syscall
 
-	addi $a1, $zero, 3
-	move $a0, $s0
+	addi $a1, $zero, 4
+	addi $a0, $zero, 268501288
 	jal delete
+	jal perror		# Exception Handler
 	
 	move $a0, $s0
 	jal print
@@ -212,6 +225,7 @@ insertInteractivo:
 	INSERTA: 
 		addi $a0, $zero, 4
 		jal malloc
+		jal perror 			# Exception Handler
 		
 		move $t3, $v0
 	
@@ -228,6 +242,7 @@ insertInteractivo:
 		move $a1, $t3
 
 		jal insert
+		jal perror 			# Exception Handler
 		
 		j insertInteractivo
 			
@@ -243,6 +258,8 @@ insertInteractivo:
 		move $a1, $v0
 		
 		jal delete
+		
+		jal perror 			# Exception Handler
 		
 		j insertInteractivo
 		
@@ -271,4 +288,4 @@ exitInsertInteractivo:
 .include "free.asm"
 .include "delete.asm"
 .include "print.asm"
-
+.include "perror.asm"
