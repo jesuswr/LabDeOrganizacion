@@ -27,23 +27,23 @@ delete:
 		
 	bgt $s1, $s2, deleteException2			# Determining if the position to delete is a valid one
 
-	lw $s3, 0($s0) 		# se carga FIRST == s
-	addi $s4, $zero, 1 	# contador i = 1
-	move $s5, $s3		# inicializo variable auxiliar temp
+	lw $s3, 0($s0) 		
+	addi $s4, $zero, 1 	
+	move $s5, $s3		
 		
 	whileDelete: 
 		beq $s4, $s1, exitWhileDelete
-		move $s5, $s3		# temp = s.prev
-		addi $s4, $s4, 1 	# i = i + 1
-		lw $s3, 4($s3) 		# s = s.next
+		move $s5, $s3		
+		addi $s4, $s4, 1 	
+		lw $s3, 4($s3) 		
 		
 		j whileDelete
 		
 	exitWhileDelete: 
-		lw $s6, 4($s3)	# guardo el next del elemento a eliminar
-		move $a0, $s3 	# guardo en $a0 la direccion a liberar
+		lw $s6, 4($s3)	
+		move $a0, $s3
 		jal free
-		addi $s2, $s2, -1	# SIZE = SIZE - 1
+		addi $s2, $s2, -1	
 		sw $s2, 8($s0)
 		li $v0, 0 
 				
@@ -52,7 +52,7 @@ delete:
 	beq $s1, 1, deleteFirst
 	
 	deleteNormal: 
-		sw $s6, 4($s5) 		# guardo el next del elemento eliminado en el next de su anterior: temp.next = nNext
+		sw $s6, 4($s5)
 		j ver
 		
 	deleteFirst: 
