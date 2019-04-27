@@ -25,46 +25,50 @@ insert:
  
 	sw $a1, 0($v0) 			# Saving the "element" in the first given address
 	sw $zero, 4($v0) 		# Setting the node's "next" to 0
- 
-	sw $v0, 4($s0) 			# Updating "last"
- 
+
 	lw $s1, 8($s0)		 	
 	addi $s1, $s1, 1 		
 	sw $s1, 8($s0) 			# Increasing size
- 
- 	
+			
 	beq $s1, 1, setExtremes
-   
-	bgt $s1, 1, updateNext
  
-	updateNext:
+	lw $s2, 4($s0)			 
+	sw $v0, 4($s2)			# Setting last's next as the new node's address
+	 
+	sw $v0, 4($s0) 			# Updating "last"
  
-		lw $s2, 0($s0)
-	 	addi $s3, $zero, 1 	
-	 	addi $s1, $s1, -1 	
+	j exitInsert   
+#	bgt $s1, 1, updateNext
+ 
+#	updateNext:
+ 
+#		lw $s2, 0($s0)
+#	 	addi $s3, $zero, 1 	
+#	 	addi $s1, $s1, -1 	
  	
-	 	WhileNext: 
+#	 	WhileNext: 
  	
-	 		beq $s3, $s1, exitNext
+#	 		beq $s3, $s1, exitNext
  		
-	 		lw $s2, 4($s2) 	
-	        addi $s3, $s3, 1
+#	 		lw $s2, 4($s2) 	
+#	        addi $s3, $s3, 1
 	        
-       		li $v0, 0
+#       		li $v0, 0
        		
-	        j WhileNext
+#	        j WhileNext
         
-	    exitNext: 
+#	    exitNext: 
     	
-	    	lw $s4, 4($s0)
-	    	sw $s4, 4($s2) 			# Setting "prev.next = deleted.next "
+#	    	lw $s4, 4($s0)
+#	    	sw $s4, 4($s2) 			# Setting "prev.next = deleted.next "
 	    	
-	    	j exitInsert
+#	    	j exitInsert
 	    	
     	
 	  setExtremes:
     
 	    sw $v0, 0($s0)				# updating "first"
+	    sw $v0, 4($s0) 			# Updating "last"
 	    
 	    j exitInsert
 	 

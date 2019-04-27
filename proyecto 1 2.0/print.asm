@@ -1,9 +1,6 @@
 .data
-	pipe: 	.asciiz "|"
-	pipe2: 	.asciiz "|->"
 	newline:.asciiz "\n"
-	tab: 	.asciiz "\t"
-	nothing: .asciiz "nothing\n"
+	space: 	.asciiz " "
 .text
 
 print: 
@@ -33,16 +30,16 @@ print:
 	
 		beq $s1, $s0, exitWhilePrint
 		
-		li $v0, 4
-		la $a0, pipe
-		syscall 
+#  		li $v0, 4
+#		la $a0, pipe
+#		syscall 
 		
 		lw $t1, 0($t0) 			
 		lw $t1, 0($t1)
 		%func($t1)
 		
 		li $v0, 4
-		la $a0, pipe2
+		la $a0, space
 		syscall 
 
 		lw $t0, 4($t0) 	
@@ -50,17 +47,17 @@ print:
 		j whilePrint
 		
 	exitWhilePrint: 
-		li $v0, 4
-		la $a0, pipe
-		syscall 		
+#		li $v0, 4
+#		la $a0, pipe
+#		syscall 		
 		
 		lw $t1, 0($t0)
 		lw $t1, 0($t1)
 		%func($t1)
 		
-		li $v0, 4
-		la $a0, pipe
-		syscall 		
+#		li $v0, 4
+#		la $a0, pipe
+#		syscall 		
 	
 		li $v0, 4
 		la $a0, newline
@@ -78,9 +75,9 @@ print:
 	
 	j exitPrint
 	
-	emptyList:			# This tag prints the string "nothing" whenever the given list is empty
+	emptyList:			# This tag prints " " whenever the given list is empty
 		li $v0, 4
-		la $a0, nothing
+		la $a0, space
 		syscall
 		
 		j exitPrint	
