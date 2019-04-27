@@ -19,8 +19,10 @@
 ### Se considera que los elementos se crean en el mismo espacio que el de la lista
 ### para los registro GLOBALES se usara $s_i
 
+
 ### Es importante aclarar que luego de cada llamada a init, malloc, free, insert y delete se coloca "jal perror" para imprimir
 ### estatus de error.
+## Adicionalmente, es necesario verificar en cada llamada a malloc que se retorna un $v0 positivo
 
 
 ## CREACION DE LA LISTA ################################################################################
@@ -49,6 +51,8 @@
 	move $t0, $v0					# aqui se guarda el Elements_ptr a usar en WHileElements
 	
 	addi $s3, $zero, 0
+	
+	blt $t0, 0, insertInteractivo
 	
 ## INSERCION DE LOS ELEMENTOS ##########################################################################
 	whileElements: 
@@ -225,7 +229,10 @@ insertInteractivo:
 	INSERTA: 
 		addi $a0, $zero, 4
 		jal malloc
+		move $t7, $v0
 		jal perror 			# Exception Handler
+		
+		blt $t7, 0, insertInteractivo
 		
 		move $t3, $v0
 	

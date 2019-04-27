@@ -26,7 +26,10 @@ delete:
 		
 	lw $s2, 8($s0) 			
 		
-	bgt $s1, $s2, deleteException2			# Determining if the position to delete is a valid one
+	bgt $s1, $s2, pasoInt			# Determining if the position to delete is a valid one
+	
+		pasoInt: 
+			beq $s2, 0, deleteException2
 
 	lw $s3, 0($s0) 		
 	addi $s4, $zero, 1 	
