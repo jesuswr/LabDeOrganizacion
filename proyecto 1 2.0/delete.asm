@@ -4,6 +4,7 @@
 delete: 
 	## This function receives the address of a list and the position of a node to be deleted
 	## It returns the address of the element contained in the deleted node 
+	
 	sw $s0, 0($sp) 
 	sw $s1, -4($sp) 
 	sw $s2, -8($sp)

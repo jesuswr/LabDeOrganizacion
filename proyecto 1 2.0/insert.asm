@@ -7,12 +7,10 @@ insert:
 	sw $s0, 0($sp) 
 	sw $s1, -4($sp) 
 	sw $s2, -8($sp) 
-	sw $s3, -12($sp) 
-	sw $s4, -16($sp)
- 	sw $ra -20($sp)
- 	sw $t0, -24($sp)
+ 	sw $ra -12($sp)
+ 	sw $t0, -16($sp)
 
- 	addi $sp, $sp, -28
+ 	addi $sp, $sp, -20
 
 	move $s0, $a0
 					
@@ -40,33 +38,8 @@ insert:
 	sw $v0, 4($s0) 			# Updating "last"
  
  	li $v0, 0 
-	j exitInsert   
-#	bgt $s1, 1, updateNext
- 
-#	updateNext:
- 
-#		lw $s2, 0($s0)
-#	 	addi $s3, $zero, 1 	
-#	 	addi $s1, $s1, -1 	
- 	
-#	 	WhileNext: 
- 	
-#	 		beq $s3, $s1, exitNext
- 		
-#	 		lw $s2, 4($s2) 	
-#	        addi $s3, $s3, 1
-	        
-#       		li $v0, 0
-       		
-#	        j WhileNext
-        
-#	    exitNext: 
+	j exitInsert   	    	
     	
-#	    	lw $s4, 4($s0)
-#	    	sw $s4, 4($s2) 			# Setting "prev.next = deleted.next "
-	    	
-#	    	j exitInsert
-	    	
     	
 	  setExtremes:
     
@@ -87,13 +60,11 @@ insert:
 		
 		lw $t0, 4($sp)
 		lw $ra, 8($sp)
-	 	lw $s4, 12($sp) 
-	 	lw $s3, 16($sp) 
-		lw $s2, 20($sp) 
-		lw $s1, 24($sp) 
-		lw $s0, 28($sp)
+		lw $s2, 12($sp) 
+		lw $s1, 16($sp) 
+		lw $s0, 20($sp)
  
-		addi $sp, $sp, 28
+		addi $sp, $sp, 20
 
 	 	jr $ra 
 	 
