@@ -1,7 +1,9 @@
 .text
 
 insert: 
- 	 
+	## This function receives the address of a list, and the address of the element to be inserted
+	## It returns 0 if everything went well, a negative number otherwise 	 
+	
 	sw $s0, 0($sp) 
 	sw $s1, -4($sp) 
 	sw $s2, -8($sp) 
@@ -37,6 +39,7 @@ insert:
 	 
 	sw $v0, 4($s0) 			# Updating "last"
  
+ 	li $v0, 0 
 	j exitInsert   
 #	bgt $s1, 1, updateNext
  
@@ -69,7 +72,7 @@ insert:
     
 	    sw $v0, 0($s0)				# updating "first"
 	    sw $v0, 4($s0) 			# Updating "last"
-	    
+		li $v0, 0	    
 	    j exitInsert
 	 
 	insertException: 

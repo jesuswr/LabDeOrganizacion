@@ -1,6 +1,8 @@
 .text
 	
 create: 
+	## This function initialices the list
+	## It returns the address of the list head
 
 	sw $ra, 0($sp)
 	sw $s0, -4($sp)  

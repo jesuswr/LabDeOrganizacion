@@ -4,6 +4,9 @@
 .text
 
 print: 
+	## This function receives the address of the list
+	## It returns the elements of the list
+
 
 	sw $s0, 0($sp) 
 	sw $s1, -4($sp) 
@@ -79,6 +82,8 @@ print:
 		li $v0, 4
 		la $a0, space
 		syscall
+		
+		
 		
 		j exitPrint	
 
