@@ -9,7 +9,7 @@ create:
 	addi $sp, $sp, -8
 	
 	
-	addi $a0, $zero, 31			# Amount of memory to be asked for allocating purposes
+	addi $a0, $zero, 400000		# Amount of memory to be asked for allocating purposes
 
 	jal init
 	
