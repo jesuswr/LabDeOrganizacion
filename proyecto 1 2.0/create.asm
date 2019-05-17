@@ -9,13 +9,6 @@ create:
 	addi $sp, $sp, -8
 	
 	
-<<<<<<< HEAD
-=======
-	addi $a0, $zero, 310			# Amount of memory to be asked for allocating purposes
-
-	jal init
-	
->>>>>>> 021febdf19ccf886cfe0dedfdf91e1c911a230e7
 	addi $s0, $zero, -1 
 	
 	addi $a0, $zero, 16		# Allocating memory for list attributes and identifier
