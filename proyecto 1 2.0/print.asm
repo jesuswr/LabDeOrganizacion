@@ -33,10 +33,6 @@ print:
 	
 		beq $s1, $s0, exitWhilePrint
 		
-#  		li $v0, 4
-#		la $a0, pipe
-#		syscall 
-		
 		lw $t1, 0($t0) 			
 		lw $t1, 0($t1)
 		%func($t1)
@@ -49,18 +45,12 @@ print:
 		addi $s1, $s1, 1
 		j whilePrint
 		
-	exitWhilePrint: 
-#		li $v0, 4
-#		la $a0, pipe
-#		syscall 		
+	exitWhilePrint: 		
 		
 		lw $t1, 0($t0)
 		lw $t1, 0($t1)
 		%func($t1)
-		
-#		li $v0, 4
-#		la $a0, pipe
-#		syscall 		
+		 		
 	
 		li $v0, 4
 		la $a0, newline
