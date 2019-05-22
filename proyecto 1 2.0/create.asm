@@ -15,20 +15,27 @@ create:
 	
 	jal malloc 
 	
+	beq $v0, -1, exception
+	
 	sw $s0, 0($v0) 			# An empty list holds first = -1
 	sw $s0, 4($v0) 			# An empty list holds last = -1
 	sw $zero, 8($v0) 				
 	sw $s0, 12($v0) 		# All lists in the 16th position of its pointer address, have an identifier
 					# with the value of 0xffffffff that let us verify that they're actually lists
+	j exitCreate
 
-
-	lw $s0, 4($sp)
-	lw $ra, 8($sp) 
+	exception: 
 	
-	addi $sp, $sp, 8
+		li $v0, -7
+		
+	exitCreate:
+		lw $s0, 4($sp)
+		lw $ra, 8($sp) 
 	
-	jr $ra	
-
+		addi $sp, $sp, 8	
+	
+		jr $ra	
+	
 
 
 	
