@@ -7,6 +7,7 @@
 	
 .text
 
+
 init:
 	# This function receives an int (x) that represents an amount of bytes to be managed by the other functions.
 	# It returns 0 if the operation was successful.
