@@ -36,6 +36,7 @@ p1:
 	
 
 p2:	
+	add $3,$3,$3
 	li $v0 4
 	la $a0 m2
 	syscall
@@ -43,9 +44,12 @@ p2:
 	b p2
 
         add $t1, $t1, $t1
+        add $t2, $t2, $t2
 	
 	li $v0, 10
 	syscall
+	nop
+	nop
 	nop
 
 p3:	
@@ -54,8 +58,13 @@ p3:
 	syscall
 
 	b p3
+	
+	add $t1, $t1, $t1
+        add $t2, $t2, $t2
 
 	li $v0, 10
 	syscall
+	nop
+	nop
 	
-	.include "myexceptions.s"
+	#.include "myexceptions.s"
