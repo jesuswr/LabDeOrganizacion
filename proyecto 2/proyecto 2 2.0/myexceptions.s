@@ -197,6 +197,7 @@ __eoth:
 	################################################################
 	
 	.data
+		movesArray: 	.word 	0	# Arreglo que contiene direcciones a los arreglos de movimientos.
 
 	################################################################
 	##
@@ -211,9 +212,40 @@ __eoth:
 	.text
 	.globl main
 main:
+	lw 	$t0, NUM_PROGS
+	move	$a0, $t0
+	sll	$a0, $a0, 2
+	li	$v0, 9
+	syscall				# Here we ask for space for the array that contains the arrays of moves.
+	
+	sw	$v0, movesArray
+	move	$t2, $v0
+	
+	
+	la	$t3, PROGS
+	
+	whileToCallgetMoves:
+		beqz	$t0, exitWhilegetMoves
+		
+		lw	$t1, ($t3)
+		addi	$a0, $t1, 0
+		jal	getMoves
+		sw	$v0, ($t2)
+		
+		addi	$t2, $t2, 4
+		addi	$t0, $t0, -1
+		addi 	$t3, $t3, 4
+		j whileToCallgetMoves
+
+
+	exitWhilegetMoves:
+	
 	lw $t1, PROGS 
 	jr $t1
 	
 fin:
 	li $v0 10
 	syscall			# syscall 10 (exit)
+	
+funciones:
+	.include "getMoves.s"

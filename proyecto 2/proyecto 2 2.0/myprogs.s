@@ -67,4 +67,4 @@ p3:
 	nop
 	nop
 	
-	#.include "myexceptions.s"
+	.include "myexceptions.s"
