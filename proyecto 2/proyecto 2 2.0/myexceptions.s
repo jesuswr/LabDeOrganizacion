@@ -230,7 +230,7 @@ main:
 		lw	$t1, ($t3)
 		addi	$a0, $t1, 0
 		jal	getMoves
-		sw	$v0, ($t2)
+		sw	$v0, ($t2)		# Here we save the address of the array in movesArray
 		
 		addi	$t2, $t2, 4
 		addi	$t0, $t0, -1

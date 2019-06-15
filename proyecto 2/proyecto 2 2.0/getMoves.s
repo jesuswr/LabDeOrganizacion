@@ -3,6 +3,16 @@
 # QUE MOVER CADA INSTRUCCION.
 getMoves:
 
+	# primero guardamos las $s
+	sw	$s0, ($sp)
+	sw 	$s1, -4($sp)
+	sw	$s2, -8($sp)
+	sw 	$s3, -12($sp)
+	sw	$s4, -16($sp)
+	
+	addi	$sp, $sp, -20
+	
+
 	move 	$s0, $a0				# $s0 == direccion en la que empieza el programa
 	
 	getSizeWhile:
@@ -69,6 +79,17 @@ getMoves:
 		j	whileCountAdd
 		
 	exitCountAdd:
+	
+	
+	# Ahora recuperamos las $s del stack pointer
+	
+	lw	$s4, 4($sp)
+	lw	$s3, 8($sp)
+	lw 	$s2, 12($sp)
+	lw	$s1, 16($sp)
+	lw	$s0, 20($sp)
+	
+	addi	$sp, $sp, 20
 		
 	jr	$ra
 		
