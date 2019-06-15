@@ -71,7 +71,7 @@ getMoves:
 			j 	exit
 			
 		addToCount:
-		addi	$s2, $s2, 1			# si es un add, anadimos al contador
+		addi	$s2, $s2, 4			# si es un add, anadimos al contador
 		
 		exit:
 		addi	$s1, $s1, 4

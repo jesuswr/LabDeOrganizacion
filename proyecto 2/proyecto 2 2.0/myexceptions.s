@@ -240,6 +240,29 @@ main:
 
 	exitWhilegetMoves:
 	
+	
+	lw	$t0, NUM_PROGS
+	la	$t1, PROGS
+	lw	$t2, movesArray
+	
+	whileToCallMoveInstructions:
+		beqz 	$t0, exitCallMoveInstructions
+		
+		lw	$a0, ($t1)
+		lw	$a1, ($t2)
+		
+		jal	moveInstructions
+		
+		
+		addi	$t1, $t1, 4
+		addi	$t2, $t2, 4
+		addi	$t0, $t0, -1
+		j	whileToCallMoveInstructions
+	exitCallMoveInstructions:
+	
+	
+	
+	
 	lw $t1, PROGS 
 	jr $t1
 	
@@ -249,3 +272,4 @@ fin:
 	
 funciones:
 	.include "getMoves.s"
+	.include "moveInstructiones.s"
