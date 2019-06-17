@@ -260,7 +260,32 @@ main:
 		j	whileToCallMoveInstructions
 	exitCallMoveInstructions:
 	
+	# Preparense para los problemas
 	
+	lw $t0, PROGS
+	lw $t1, movesArray
+	lw $t2, NUM_PROGS
+	addi $t3, $zero, 0
+	WhileToUpdateBeqs: 
+		beqz $t2, exitWhileToUpdateBeqs
+
+		addi $a0, $t0, 0
+		addi $a1, $t1, 0
+		
+		jal updateBeqs
+		
+		#addi $t0, $t0, 4
+		#addi $t1, $t1, 4
+		addi $t3, $t3, 4
+		lw $t0, PROGS($t3)
+		lw $t1, movesArray($t3)
+		addi $t2, $t2, -1
+		
+		j WhileToUpdateBeqs
+	exitWhileToUpdateBeqs: 
+	
+	# Y mas vale que teman
+			
 	
 	
 	lw $t1, PROGS 
@@ -273,3 +298,4 @@ fin:
 funciones:
 	.include "getMoves.s"
 	.include "moveInstructiones.s"
+	.include "updateBeqs.s"

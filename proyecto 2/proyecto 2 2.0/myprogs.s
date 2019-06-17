@@ -29,10 +29,16 @@ p1:
 	la $a0 m1
 	syscall
 	
-	b p1
+	addi $s0, $zero, 1
+	
+	add $s1, $s0, $s0
+	add $s3, $s1, $s1
+	add $s4, $s3, $s3
+	
+	beq $s1, 2, p1
 
 	li $v0, 10
-        syscall
+    syscall
 	
 
 p2:	
