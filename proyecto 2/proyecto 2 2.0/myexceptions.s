@@ -274,11 +274,9 @@ main:
 		
 		jal updateBeqs
 		
-		#addi $t0, $t0, 4
-		#addi $t1, $t1, 4
-		addi $t3, $t3, 4
-		lw $t0, PROGS($t3)
-		lw $t1, movesArray($t3)
+		addi $t3, $t3, 4				# Contador *4
+		lw $t0, PROGS($t3)				# recibo el siguiente programa
+		lw $t1, movesArray($t3)			# recibo el siguiente arreglo de movimientos
 		addi $t2, $t2, -1
 		
 		j WhileToUpdateBeqs
