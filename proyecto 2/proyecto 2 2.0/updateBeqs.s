@@ -12,8 +12,9 @@ updateBeqs:
 	sw $t0, -32($sp)
 	sw $t1, -36($sp)
 	sw $t2, -40($sp)
+	sw $t3, -44($sp)
 	
-	addi $sp, $sp, -44
+	addi $sp, $sp, -48
 	
 	addi $s0, $a0, 0 			## Esto es una direccion de memoria
 	addi $s1, $a1, 0 
@@ -26,12 +27,17 @@ updateBeqs:
 		andi $s3, $s3, 63
 		
 		bne $s3, 4, skipCorrection			# Si no es un beq, lo ignoro
-		
+		# hay que determinar si el offset es positivo o negativo
 		andi $s4, $t1, 65535 				# Considero el offset
+		
+		andi $t3, $s4, 61440			# Aqui cargo el signo del offset a $t3
+		bne $t3, 61440, skipCorrection		# Si no es negativo, no hay que cambiar nada.
+
+		# Si es negativo 
 		#
 		addi $t2, $zero, 65535
 		sub $s4, $t2, $s4				# Como el offset es un negativo, lo resto de su tope para saber cuanto es
-		addi $s4, $s4, -1				# Le resto 1 por compensacion
+		addi $s4, $s4, -1				# Le resto 1 por compensacion (pues el offset cuenta una instruccion de mas?) 
 		mul $s4, $s4, 4					# Lo multiplico * 4 para considerar palabras			
 		#
 		lw $s5, ($s1)						# Cargo movesArray[i]
@@ -53,19 +59,19 @@ updateBeqs:
 		j whileToCorrect
 		
 	exitWhileToCorrect: 
+	lw $t3, 4($sp)
+	lw $t2, 8($sp)	
+	lw $t1, 12($sp)
+	lw $t0, 16($sp)
+	lw $s7, 20($sp)
+	lw $s6, 24($sp)
+	lw $s5, 28($sp)
+	lw $s4, 32($sp)
+	lw $s3, 36($sp)
+	lw $s2, 40($sp)
+	lw $s1, 44($sp)
+	lw $s0, 48($sp)
 	
-	lw $t2, 4($sp)	
-	lw $t1, 8($sp)
-	lw $t0, 12($sp)
-	lw $s7, 16($sp)
-	lw $s6, 20($sp)
-	lw $s5, 24($sp)
-	lw $s4, 28($sp)
-	lw $s3, 32($sp)
-	lw $s2, 36($sp)
-	lw $s1, 40($sp)
-	lw $s0, 44($sp)
-	
-	addi $sp, $sp, 44
+	addi $sp, $sp, 48
 	
 	jr $ra
