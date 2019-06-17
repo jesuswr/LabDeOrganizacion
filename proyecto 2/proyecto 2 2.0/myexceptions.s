@@ -84,6 +84,12 @@ s2:	.word 0
 	sw $v0 s1		# Not re-entrant and we can't trust $sp
 	sw $a0 s2		# But we need to use these registers
 
+	mfc0	$k1, $14
+	lw	$k1, ($k1)
+	
+	beq	$k1, 0x80d, break20Int
+	beq	$k1, 0x40d, break10Int
+
 	mfc0 $k0 $13		# Cause register
 	srl $a0 $k0 2		# Extract ExcCode Field
 	andi $a0 $a0 0x1f
@@ -125,9 +131,27 @@ ok_pc:
 	andi $a0 $a0 0x1f
 	bne $a0 0 ret		# 0 means exception was an interrupt
 	nop
+	
+	j 	ret
 
 # Interrupt-specific code goes here!
 # Don't skip instruction at EPC since it has not executed.
+
+	break20Int:
+		lw	$k0, currentProgram
+		sll	$k0, $k0, 2
+		
+		lw	$k1, addCounter
+		add	$k1, $k1, $k0
+		
+		lw	$k0, ($k1)
+		addi	$k0, $k0, 1
+		sw	$k0, ($k1)
+		
+		j 	ret
+		
+	break10Int:
+	
 
 
 ret:
@@ -154,7 +178,7 @@ ret:
 	mtc0 $k0 $12
 
 # Return from exception on MIPS32:
-	eret
+	eret 
 
 # Return sequence for MIPS-I (R2000):
 #	rfe			# Return from exception handler
@@ -332,6 +356,20 @@ main:
 	
 	move 	$t1, $v0
 	sw	$t1, programReturn
+
+	lw	$t3, NUM_PROGS	
+	la	$t2, PROGS
+	whileToPlaceRet:
+		beqz	$t3, exitPlaceRet
+		
+		lw	$t4, ($t2)
+		sw	$t4, ($t1)
+		
+		addi	$t3, $t3, -1
+		addi	$t2, $t2, 4
+		addi	$t1, $t1, 4
+		j 	whileToPlaceRet
+	exitPlaceRet:
 	
 	lw	$t0, NUM_PROGS
 	sll	$t0, $t0, 2
