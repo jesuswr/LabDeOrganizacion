@@ -37,7 +37,10 @@ p1:
 	beq $s1, 2, p1
 
 	li $v0, 10
-    syscall
+    	syscall
+    	nop
+    	nop
+    	nop
 	
 
 p2:	

@@ -197,7 +197,12 @@ __eoth:
 	################################################################
 	
 	.data
-		movesArray: 	.word 	0	# Arreglo que contiene direcciones a los arreglos de movimientos.
+		movesArray: 		.word 	0	# Arreglo que contiene direcciones a los arreglos de movimientos.
+		finishedProgram:	.word 	0	# Arreglo de 0 y 1 que nos dira si un programa ya termino o no.
+		registerValues:		.word	0	# Arreglo que apunta a arreglos donde estan guardados los registros.
+		programReturn:		.word	0 	# Arreglo que contendra la direccion en la que quedo cada programa.
+		currentProgram:		.word 	0	# Entero que representa en que programa estamos.
+		addCounter:		.word 	0	# Arreglo que lleva cuenta de cuantos add lleva cada programa.
 
 	################################################################
 	##
@@ -260,30 +265,82 @@ main:
 		j	whileToCallMoveInstructions
 	exitCallMoveInstructions:
 	
-	# Preparense para los problemas
+		
+	lw 	$t0, PROGS
+	lw 	$t1, movesArray
+	lw 	$t2, NUM_PROGS
+	addi 	$t3, $zero, 0
 	
-	lw $t0, PROGS
-	lw $t1, movesArray
-	lw $t2, NUM_PROGS
-	addi $t3, $zero, 0
 	WhileToUpdateBeqs: 
-		beqz $t2, exitWhileToUpdateBeqs
+		beqz 	$t2, exitWhileToUpdateBeqs
 
-		addi $a0, $t0, 0
-		addi $a1, $t1, 0
+		addi 	$a0, $t0, 0
+		addi 	$a1, $t1, 0
 		
-		jal updateBeqs
+		jal 	updateBeqs
 		
-		addi $t3, $t3, 4				# Contador *4
-		lw $t0, PROGS($t3)				# recibo el siguiente programa
-		lw $t1, movesArray($t3)			# recibo el siguiente arreglo de movimientos
-		addi $t2, $t2, -1
+		addi 	$t3, $t3, 4				# Contador *4
+		lw 	$t0, PROGS($t3)				# recibo el siguiente programa
+		lw 	$t1, movesArray($t3)			# recibo el siguiente arreglo de movimientos
+		addi 	$t2, $t2, -1
 		
-		j WhileToUpdateBeqs
+		j 	WhileToUpdateBeqs
+	
 	exitWhileToUpdateBeqs: 
 	
-	# Y mas vale que teman
-			
+	# Aqui solicitaremos el espacio necesario para nuestro manejador de interrupciones
+	
+	lw	$t0, NUM_PROGS
+	sll	$t0, $t0, 2
+	addi	$a0, $t0, 0
+	li	$v0, 9
+	syscall					# Este sera el espacio para el arreglo de programas terminados
+	
+	move	$t1, $v0
+	sw	$t1, finishedProgram
+	
+	lw	$t0, NUM_PROGS
+	sll	$t0, $t0, 2
+	addi	$a0, $t0, 0
+	li	$v0, 9
+	syscall					# Este sera el espacio para un arreglo que apunta a arreglos donde estaran los valores de los registros guardados
+	
+	move 	$t1, $v0
+	sw	$t1, registerValues
+	
+	add	$t0, $t0, $t1
+	
+	whileToGetArrays:
+		beq	$t0, $t1, exitGetArrays
+		
+		li	$a0, 100			# Este es el espacio necesario para guardar los 25 registros, del $at al $t9
+		li	$v0, 9
+		syscall
+		
+		sw	$v0, ($t1)
+	
+	
+		addi	$t1, $t1, 4
+		j 	whileToGetArrays
+	exitGetArrays:
+	
+	lw	$t0, NUM_PROGS
+	sll	$t0, $t0, 2
+	addi	$a0, $t0, 0
+	li	$v0, 9					# Este sera el arreglo que tendra donde quedo cada programa.
+	syscall	
+	
+	move 	$t1, $v0
+	sw	$t1, programReturn
+	
+	lw	$t0, NUM_PROGS
+	sll	$t0, $t0, 2
+	addi	$a0, $t0, 0
+	li	$v0, 9					# Este sera el arreglo que tendra cuantos add lleva cada programa.
+	syscall	
+	
+	move 	$t1, $v0
+	sw	$t1, addCounter
 	
 	
 	lw $t1, PROGS 
