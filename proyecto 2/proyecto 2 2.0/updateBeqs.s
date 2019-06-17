@@ -31,6 +31,7 @@ updateBeqs:
 		#
 		addi $t2, $zero, 65535
 		sub $s4, $t2, $s4				# Como el offset es un negativo, lo resto de su tope para saber cuanto es
+		addi $s4, $s4, -1				# Le resto 1 por compensacion
 		mul $s4, $s4, 4					# Lo multiplico * 4 para considerar palabras			
 		#
 		lw $s5, ($s1)						# Cargo movesArray[i]
