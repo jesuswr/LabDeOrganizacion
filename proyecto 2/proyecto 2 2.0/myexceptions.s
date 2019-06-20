@@ -151,7 +151,204 @@ ok_pc:
 		j 	ret
 		
 	break10Int:
+		lw $k0, currentProgram 			# i = currentProgram
+		mul $k0, $k0, 4			
+		addi $k1, $zero, 1				
+		sw $k1, finishedPrograms($k0)	# finishedProgram[i] = 1
+		
+		addi $k0, $zero, 0 				# arg = 0 
+		
+		j goAhead
+		
+
+
+########################### Preparense para los problemas ########################### 
+
+.macro load_auxiliar_registers(%type) 
+	sw $k0, additionalSpace
+	lw $k0, someRegistersArray
 	
+	lw $t0, 0($k0) 
+	lw $t1, 4($k0) 
+	lw $t2, 8($k0) 
+	lw $t3, 12($k0) 
+	lw $t4, 16($k0) 
+	lw $t5, 20($k0) 
+	lw $t6, 24($k0)
+	lw $t7, 28($k0)
+	lw $s0, 32($k0)
+	lw $s1, 36($k0) 
+	lw $s2, 40($k0) 
+	lw $s3, 44($k0)
+	lw $s4, 48($k0) 
+	lw $s5, 52($k0) 
+	lw $s6, 56($k0) 
+	lw $s7, 60($k0)
+	
+	lw $k0, additionalSpace	
+.end_macro
+
+.macro store_auxiliar_registers
+
+	sw $k0, additionalSpace
+	lw $k0, someRegistersArray
+	
+	sw $t0, 0($k0) 
+	sw $t1, 4($k0) 
+	sw $t2, 8($k0) 
+	sw $t3, 12($k0) 
+	sw $t4, 16($k0) 
+	sw $t5, 20($k0) 
+	sw $t6, 24($k0)
+	sw $t7, 28($k0)
+	sw $s0, 32($k0)
+	sw $s1, 36($k0) 
+	sw $s2, 40($k0) 
+	sw $s3, 44($k0)
+	sw $s4, 48($k0) 
+	sw $s5, 52($k0) 
+	sw $s6, 56($k0) 
+	sw $s7, 60($k0)
+	
+	lw $k0, additionalSpace
+.end_macro
+
+############################ **GoAheadRoutine**(arg, i)
+##Esta funcion recibe 2 argumentos, pero como no nos estamos rigiendo por las convenciones
+##usaremos i = $k0 y arg = $k1
+
+goAhead:
+	
+	store_auxiliar_registers		#Almaceno los valores de algunos registros en memoria para poder usar los registros
+	addi $s0, $zero, 0 							#closeCounter = 0 
+	addi $t0, $k0, 0				#Decidi no complicarme y usar solo registros distintos a k
+	addi $t1, $k1, 0
+	
+	whileActivePrograms: 						# while (closeCounter != NUM_PROGS ) 
+		beq $s0, NUM_PROG, exitWhileActiveProgams	
+
+		lw $s1, finishedProgram($t0) 		
+		bne $s1 ,0, continueSearch				# if ( finishedProgram[i] == 0 ) : se hallo un programa activo
+		
+		load_auxiliar_registers		# Primero, cargo los viejos valores de los registros
+		
+		bne $t1, 1, ignoreStore					# if ( arg == 1 ) : almacena los registros en registerValues[currentProgram]
+
+		store_registers
+		
+		ignoreStore: 
+			
+			retrieve_registers		#Aqui no importa que use $k0 o $k1 en store o retrieve porque
+									#Luego de esto paso al main??
+			lw $t0, programReturn($t0) 
+			mtc0 $t0, $14
+			eret					#Se supone que esto regresa a la ejecucion del programa
+			
+		continueSearch: 
+		
+			addi $t0, $t0, 4					# i += 1
+			addi $s0, $s0, 1					# closeCounter += 1 
+		
+			j whileActivePrograms		
+	exitWhileActivePrograms:
+
+
+############################ **MacroToRetrieveRegisters**
+
+.macro retrieve_registers
+			lw	$k0, currentProgram
+			mul $k0, $k0, 4
+			lw 	$k1, registerValues($k0)
+			lw $k1, 0($k1)
+			
+			lw $at, 0($k1)
+			lw $v0, 4($k1)
+			lw $v1, 8($k1)
+			lw $a0, 12($k1)
+			lw $a1, 16($k1)
+			lw $a2, 20($k1)
+			lw $a3, 24($k1)
+			lw $t0, 28($k1)
+			lw $t1, 32($k1)
+			lw $t2, 36($k1)
+			lw $t3, 40($k1)
+			lw $t4, 44($k1)
+			lw $t5, 48($k1)
+			lw $t6, 52($k1)
+			lw $t7, 56($k1)
+			lw $s0, 60($k1)
+			lw $s1, 64($k1)
+			lw $s2, 68($k1)
+			lw $s3, 72($k1)
+			lw $s4, 76($k1)
+			lw $s5, 80($k1)
+			lw $s6, 84($k1) 
+			lw $s7, 88($k1) 
+			lw $t8, 92($k1)
+			lw $t9, 96($k1)
+			
+.end_macro
+
+############################ **MacroToStoreRegisters** 
+
+.macro store_registers
+			lw	$k0, currentProgram
+			mul $k0, $k0, 4
+			lw 	$k1, registerValues($k0)
+			lw $k1, 0($k1) 
+			
+			sw $at, 0($k1)
+			sw $v0, 4($k1)
+			sw $v1, 8($k1)
+			sw $a0, 12($k1)
+			sw $a1, 16($k1)
+			sw $a2, 20($k1)
+			sw $a3, 24($k1)
+			sw $t0, 28($k1)
+			sw $t1, 32($k1)
+			sw $t2, 36($k1)
+			sw $t3, 40($k1)
+			sw $t4, 44($k1)
+			sw $t5, 48($k1)
+			sw $t6, 52($k1)
+			sw $t7, 56($k1)
+			sw $s0, 60($k1)
+			sw $s1, 64($k1)
+			sw $s2, 68($k1)
+			sw $s3, 72($k1)
+			sw $s4, 76($k1)
+			sw $s5, 80($k1)
+			sw $s6, 84($k1) 
+			sw $s7, 88($k1) 
+			sw $t8, 92($k1)
+			sw $t9, 96($k1)			
+
+
+.end_macro
+
+############################ **Interrupcion de teclado** 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################### Y mas vale que teman ########################### 			
 
 
 ret:
@@ -227,6 +424,9 @@ __eoth:
 		programReturn:		.word	0 	# Arreglo que contendra la direccion en la que quedo cada programa.
 		currentProgram:		.word 	0	# Entero que representa en que programa estamos.
 		addCounter:		.word 	0	# Arreglo que lleva cuenta de cuantos add lleva cada programa.
+		someRegistersArray: .space 64 # Arreglo utilizado para usar mas registros que los $k_i en el .ktext
+		additionalSpace: .space 8 #
+		
 
 	################################################################
 	##
@@ -241,6 +441,7 @@ __eoth:
 	.text
 	.globl main
 main:
+	
 	lw 	$t0, NUM_PROGS
 	move	$a0, $t0
 	sll	$a0, $a0, 2
@@ -311,7 +512,9 @@ main:
 		j 	WhileToUpdateBeqs
 	
 	exitWhileToUpdateBeqs: 
-	
+
+
+			
 	# Aqui solicitaremos el espacio necesario para nuestro manejador de interrupciones
 	
 	lw	$t0, NUM_PROGS
@@ -379,11 +582,27 @@ main:
 	
 	move 	$t1, $v0
 	sw	$t1, addCounter
+
 	
+### ESPACIO DE PRUEBA ###################	
+	store_registers
 	
+	addi $v0, $zero, 5
+	addi $v1, $zero, 7
+	addi $a0, $zero, 8
+
+	
+	retrieve_registers
+		
 	lw $t1, PROGS 
 	jr $t1
+
 	
+	
+
+				
+												
+						
 fin:
 	li $v0 10
 	syscall			# syscall 10 (exit)
