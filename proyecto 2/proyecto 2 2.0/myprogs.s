@@ -30,13 +30,17 @@ p1:
 	syscall
 	
 	addi $s1, $zero, 2
-	add $s0, $zero, $s1
-	
-	beq $s1, 2, p1
+	add $s0, $zero, $s1	
+	beq $s1, 2, X
+	addi $s3, $s0, 0
+	X: 
+	addi $s0, $zero, 2
 	
 	addi $s0, $s0, 2
 	addi $t0, $zero, 0 	
-
+	
+	j p1
+	
 	li $v0, 10
     	syscall
     	nop
@@ -50,10 +54,12 @@ p2:
 	la $a0 m2
 	syscall
 	
-	b p2
-
-        add $t1, $t1, $t1
-        add $t2, $t2, $t2
+	#j p2
+	
+    add $t1, $t1, $t1
+	add $t2, $t2, $t2
+	
+	j p2
 	
 	li $v0, 10
 	syscall
@@ -66,11 +72,11 @@ p3:
 	la $a0 m3
 	syscall
 
-	b p3
-	
 	add $t1, $t1, $t1
-        add $t2, $t2, $t2
-
+    add $t2, $t2, $t2
+	
+	j p3
+	
 	li $v0, 10
 	syscall
 	nop
